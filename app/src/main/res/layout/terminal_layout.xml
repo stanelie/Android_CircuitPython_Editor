@@ -29,8 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonUpArrow"
         android:textColor="#00AA00"
+        android:inputType="text"
         android:ems="10">
-
+        <requestFocus />
     </EditText>
 
     <Button
@@ -55,7 +56,7 @@
         android:id="@+id/buttonCTRLC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ctrl-C"
+        android:text="break"
         android:layout_alignParentBottom="true"
         android:onClick="sendCtrlC"/>
 
@@ -64,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/buttonCTRLC"
-        android:text="Ctrl-D"
+        android:text="reboot"
         android:layout_alignParentBottom="true"
         android:onClick="sendCtrlD"/>
 
@@ -193,7 +194,7 @@
             android:id="@+id/macroEditor"
             android:gravity="top"
             android:background="#333333"
-            android:textColor="#999999"
+            android.textColor="#999999"
             />
 
         <TextView
