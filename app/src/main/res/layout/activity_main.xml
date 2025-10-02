@@ -48,13 +48,14 @@
             />
 
         <ImageView
+            android:id="@+id/macroBtn"
+            android:layout_toLeftOf="@id/terminalBtn"
             android:layout_width="38dp"
             android:layout_height="38dp"
-            android:id="@+id/macroBtn"
-            android.layout_toLeftOf="@id/terminalBtn"
-            android:src="@drawable/icon_macro"
             android:onClick="showMacroLyt"
-            
+            android:src="@drawable/icon_macro"
+            android:layout_marginLeft="12dp"
+
 
             />
     </RelativeLayout>

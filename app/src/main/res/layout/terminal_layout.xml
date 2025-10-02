@@ -56,7 +56,7 @@
         android:id="@+id/buttonCTRLC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="break"
+        android:text="prompt"
         android:layout_alignParentBottom="true"
         android:onClick="sendCtrlC"/>
 
@@ -194,7 +194,7 @@
             android:id="@+id/macroEditor"
             android:gravity="top"
             android:background="#333333"
-            android.textColor="#999999"
+            android:textColor="#999999"
             />
 
         <TextView

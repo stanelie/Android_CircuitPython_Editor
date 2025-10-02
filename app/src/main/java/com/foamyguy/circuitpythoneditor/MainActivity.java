@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.hardware.usb.UsbManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -476,6 +477,10 @@ public class MainActivity extends Activity {
     }
 
     public void saveMainPy(View view) {
+        if (!isDeviceConnected()) {
+            Toast.makeText(this, "No USB device connected", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (isInREPL) {
             if (!isLoading && !isSavingCodePy) {
                 isSavingCodePy = true;
@@ -523,6 +528,10 @@ public class MainActivity extends Activity {
     }
 
     public void loadCodePy(View view) {
+        if (!isDeviceConnected()) {
+            Toast.makeText(this, "No USB device connected", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (isInREPL) {
             sendCtrlD(null);
             view.postDelayed(new Runnable() {
@@ -579,6 +588,11 @@ public class MainActivity extends Activity {
 
     public void showEditorLyt(View view) {
         mainPager.setCurrentItem(1);
+    }
+
+    private boolean isDeviceConnected() {
+        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        return manager != null && !manager.getDeviceList().isEmpty();
     }
 
     /*
@@ -854,7 +868,7 @@ public class MainActivity extends Activity {
                 editorTxt.setHorizontallyScrolling(true);
                 lineNumbersTxt = (TextView) page.findViewById(R.id.editorLineNumbers);
                 editorTxt.setLineNumbersText(lineNumbersTxt);
-                
+                editorTxt.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
                 
 
                 /*editorTxt.setOptions(Options.Default.get(editorTxt.getContext())
@@ -891,7 +905,7 @@ public class MainActivity extends Activity {
             return;
         }
 
-        super.onBackPressed();
+        finish();
     }
 
     public void hideKeyboard() {
