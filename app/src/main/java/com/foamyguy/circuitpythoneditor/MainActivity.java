@@ -17,11 +17,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -94,22 +93,22 @@ public class MainActivity extends Activity {
     private RelativeLayout macroEditorLyt;
 
     private RelativeLayout newMacroNameLyt;
-            
+
     private LineNumberEditText macroEditorTxt;
     private TextView macroLineNumbersTxt;
 
     private MacroFileAdapter macroFileAdapter;
 
     private String currentlyEditingMacro = "";
-    
+
     private boolean isInREPL = false;
-    
+
     private boolean isLoadingCodePy = false;
     private boolean isSavingCodePy = false;
     private boolean isReadyForWrite = false;
-    
+
     private boolean waitingOnHistoryResult = false;
-    
+
     private boolean sentUp = false;
 
     ViewPager mainPager;
@@ -163,7 +162,7 @@ public class MainActivity extends Activity {
         MainPagerAdapter mAdapter = new MainPagerAdapter();
         mainPager = (ViewPager) findViewById(R.id.pager);
         mainPager.setAdapter(mAdapter);
-        
+
         mainProgress = (ProgressBar) findViewById(R.id.mainProgress);
 
 
@@ -276,12 +275,12 @@ public class MainActivity extends Activity {
     }
 
     private void clearSavedTerminal(int cols) {
-        
+
         if (usbService != null) { // if UsbService was correctly binded, Send data
             //usbService.write(("\u001b[" + cols + "D").getBytes());
             //usbService.write(clearLine.getBytes());
             for (int i = 0; i < cols; i++){
-                usbService.write("\b".getBytes());    
+                usbService.write("\b".getBytes());
             }
             //display.setText(display.getText().toString().substring(0, display.getText().toString().length() - cols));
         }
@@ -317,15 +316,30 @@ public class MainActivity extends Activity {
 
     int curIndex = 0;
 
+    /**
+     * Escapes a string so it can be safely embedded within a Python string literal.
+     * This handles backslashes and double quotes to prevent syntax errors on the device.
+     * @param text The raw line of code.
+     * @return A safely escaped string suitable for Python.
+     */
+    private String escapePythonString(String text) {
+        // First, escape all backslashes. This is crucial because the backslash is the
+        // escape character itself.
+        text = text.replace("\\", "\\\\");
+        // Next, escape all double quotes, so they don't prematurely terminate the
+        // string literal in the Python command.
+        text = text.replace("\"", "\\\"");
+        return text;
+    }
+
     public boolean writeFile(String[] lines) {
         Log.i("CircuitPythonEditor", "line: " + lines[curIndex]);
-        if (lines[curIndex].length() > 0) {
-            //Log.i("CircuitPythonEditor", "last char: " + lines[curIndex].charAt(lines[curIndex].length() - 1));
-            //Log.i("CircuitPythonEditor", "newline: " + (lines[curIndex].charAt(lines[curIndex].length() - 1) == '\n'));
-            send("f.write(\"\"\"" + lines[curIndex].substring(0, lines[curIndex].length() - 1) + "\\r\\n\"\"\")");
-        } else {
-            send("f.write(\"\"\"" + lines[curIndex] + "\\r\\n\"\"\")");
-        }
+
+        // **FIXED**: The line is now escaped to handle special characters correctly.
+        // This prevents errors when the code contains quotes or backslashes.
+        String escapedLine = escapePythonString(lines[curIndex]);
+        send("f.write(\"" + escapedLine + "\\r\\n\")");
+
 
         if (curIndex >= lines.length - 1) {
             send("f.close()");
@@ -349,12 +363,12 @@ public class MainActivity extends Activity {
                 super.run();
 
                 for (int i = 0; i < lines.length; i++) {
-                    if (lines[i].length() > 0) {
 
-                        send("f.write(\"\"\"" + lines[i].substring(0, lines[i].length() - 1) + "\\r\\n\"\"\")");
-                    } else {
-                        send("f.write(\"\"\"" + lines[i] + "\\r\\n\"\"\")");
-                    }
+                    // **FIXED**: The line is now escaped to handle special characters.
+                    // This also fixes a bug where the previous `substring` call could fail.
+                    String escapedLine = escapePythonString(lines[i]);
+                    send("f.write(\"" + escapedLine + "\\r\\n\")");
+
                     final int tempI = i;
                     mainHandler.post(new Runnable() {
                         @Override
@@ -393,17 +407,12 @@ public class MainActivity extends Activity {
             //usbService.setRTS(true);
             //usbService.setRTS(false);
             isReadyForWrite = false;
-            if (lines[curIndex].length() > 0) {
-                //Log.i("CircuitPythonEditor", "last char: " + lines[curIndex].charAt(lines[curIndex].length() - 1));
-                //Log.i("CircuitPythonEditor", "newline: " + (lines[curIndex].charAt(lines[curIndex].length() - 1) == '\n'));
-                send("f.write(\"\"\"" + lines[curIndex] + "\\r\\n\"\"\")");
-                //send("f.write(\"\"\"" + lines[curIndex].substring(0, lines[curIndex].length() - 1) + "\\r\\n\"\"\")");
-            } else {
-                send("f.write(\"\"\"" + lines[curIndex] + "\\r\\n\"\"\")");
-            }
-        /*if (lines[curIndex].length() > 1) {
-            Log.i("CircuitPythonEditor", "last two: " + lines[curIndex].substring(lines[curIndex].length()-2));
-        }*/
+
+            // **FIXED**: The raw code line is escaped before being sent.
+            // This prevents special characters from breaking the save process.
+            // The previous if/else block was replaced with this single, safer approach.
+            String escapedLine = escapePythonString(lines[curIndex]);
+            send("f.write(\"" + escapedLine + "\\r\\n\")");
 
             //send("gc.collect()");
             //send("print(gc.mem_free())");
@@ -435,7 +444,7 @@ public class MainActivity extends Activity {
                 }
             }, 50);
         }
-        
+
         return false;
     }
 
@@ -448,7 +457,7 @@ public class MainActivity extends Activity {
         } else {
             send("\r\n");
         }
-        
+
         if (curIndex >= macroLines.length - 1) {
             curIndex = 0;
         } else {
@@ -457,7 +466,7 @@ public class MainActivity extends Activity {
                 public void run() {
                     curIndex++;
                     //mainProgress.setProgress(curIndex);
-                    
+
                     executeMacro(macroLines);
                 }
             }, 100);
@@ -642,11 +651,11 @@ public class MainActivity extends Activity {
                     if (data.startsWith("\u001b[") && data.endsWith("D")){
                         dontShow = true;
                         int number = Integer.valueOf(data.replace("\u001b[", "").replace("D", ""));
-                        
+
                         String curDisplay = mActivity.get().display.getText().toString();
                         String editDisplay = curDisplay.substring(0, curDisplay.length() - number);
                         mActivity.get().display.setText(editDisplay);
-                        
+
                     }
                     if (data.equals("\u001b[K")){
                         dontShow = true;
@@ -668,7 +677,7 @@ public class MainActivity extends Activity {
                     break;
                 case UsbService.CTS_CHANGE:
                     Log.i("CircuitPythonEditor", "CTS");
-                    
+
                     break;
                 case UsbService.DSR_CHANGE:
                     Log.i("CircuitPythonEditor", "DSR");
@@ -798,7 +807,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(View view) {
                         newMacroNameLyt.setVisibility(View.VISIBLE);
-                        
+
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             newMacroNameLyt.setElevation(1001);
                         }
@@ -820,14 +829,14 @@ public class MainActivity extends Activity {
                                 /* Use substring instead of replaceFirst
                                  * replaceFirst() is using regex and having
                                  * escape chars like ( in the string break it
-                                  * */
+                                 * */
                                 //data = data.replaceFirst(alreadySent.toString(), "");
                                 data = data.substring(alreadySent.length());
                                 alreadySent = new StringBuilder();
                             }
                             if (usbService != null) { // if UsbService was correctly binded, Send data
                                 usbService.write((data + "\r\n").getBytes());
-                                
+
                                 editText.setText("");
                             }
                         }else{
@@ -866,12 +875,12 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        
+
         if(macroEditorLyt.getVisibility() == View.VISIBLE){
             macroEditorLyt.setVisibility(View.GONE);
             return;
         }
-        
+
         if(newMacroNameLyt.getVisibility() == View.VISIBLE){
             newMacroNameLyt.setVisibility(View.GONE);
             return;
@@ -881,7 +890,7 @@ public class MainActivity extends Activity {
             macroLyt.setVisibility(View.GONE);
             return;
         }
-        
+
         super.onBackPressed();
     }
 
@@ -1026,7 +1035,7 @@ public class MainActivity extends Activity {
 
                 }
             });
-            
+
             fileNameTxt.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
