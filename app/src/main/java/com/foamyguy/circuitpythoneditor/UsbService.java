@@ -11,6 +11,7 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -101,17 +102,20 @@ public class UsbService extends Service {
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             if (arg1.getAction().equals(ACTION_USB_PERMISSION)) {
-                boolean granted = arg1.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
-                if (granted) // User accepted our USB connection. Try to open the device as a serial port
-                {
-                    Intent intent = new Intent(ACTION_USB_PERMISSION_GRANTED);
-                    arg0.sendBroadcast(intent);
-                    connection = usbManager.openDevice(device);
-                    new ConnectionThread().start();
-                } else // User not accepted our USB connection. Send an Intent to the Main Activity
-                {
-                    Intent intent = new Intent(ACTION_USB_PERMISSION_NOT_GRANTED);
-                    arg0.sendBroadcast(intent);
+                Bundle extras = arg1.getExtras();
+                if (extras != null) {
+                    boolean granted = extras.getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
+                    if (granted) // User accepted our USB connection. Try to open the device as a serial port
+                    {
+                        Intent intent = new Intent(ACTION_USB_PERMISSION_GRANTED);
+                        arg0.sendBroadcast(intent);
+                        connection = usbManager.openDevice(device);
+                        new ConnectionThread().start();
+                    } else // User not accepted our USB connection. Send an Intent to the Main Activity
+                    {
+                        Intent intent = new Intent(ACTION_USB_PERMISSION_NOT_GRANTED);
+                        arg0.sendBroadcast(intent);
+                    }
                 }
             } else if (arg1.getAction().equals(ACTION_USB_ATTACHED)) {
                 if (!serialPortConnected)
@@ -230,11 +234,9 @@ public class UsbService extends Service {
      * Request user permission. The response will be received in the BroadcastReceiver
      */
     private void requestUserPermission() {
-        int flags = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            flags = PendingIntent.FLAG_IMMUTABLE;
-        }
-        PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), flags);
+        Intent intent = new Intent(ACTION_USB_PERMISSION);
+        int flags = PendingIntent.FLAG_MUTABLE;
+        PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, intent, flags);
         usbManager.requestPermission(device, mPendingIntent);
     }
 

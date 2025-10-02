@@ -51,7 +51,7 @@
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:id="@+id/macroBtn"
-            android:layout_toLeftOf="@id/terminalBtn"
+            android.layout_toLeftOf="@id/terminalBtn"
             android:src="@drawable/icon_macro"
             android:onClick="showMacroLyt"
             
@@ -72,12 +72,12 @@
         style="?android:attr/progressBarStyleHorizontal"
         />
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_below="@id/mainProgress"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
 
-        </android.support.v4.view.ViewPager>
+        </androidx.viewpager.widget.ViewPager>
     </RelativeLayout>
