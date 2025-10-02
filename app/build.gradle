@@ -1,7 +1,9 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
-    namespace 'com.foamyguy.circuitpythoneditor'
+    namespace = 'com.foamyguy.circuitpythoneditor'
     compileSdkVersion 33
     defaultConfig {
         applicationId "com.foamyguy.circuitpythoneditor"
@@ -23,7 +25,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig = signingConfigs.release
         }
     }
 
@@ -32,9 +34,12 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "circuitpython_editor-${variant.versionName}-${variant.name}.apk"
+    androidComponents {
+        onVariants(selector().all()) { variant ->
+            variant.outputs.each { output ->
+                def newName = "circuitpython_editor-" + android.defaultConfig.versionName + "-" + variant.name + ".apk"
+                output.outputFileName.set(newName)
+            }
         }
     }
 }
