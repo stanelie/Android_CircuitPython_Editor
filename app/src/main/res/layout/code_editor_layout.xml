@@ -17,7 +17,15 @@
         android:layout_toLeftOf="@id/saveBtn"
         android:onClick="loadCodePy"
         android:id="@+id/loadBtn"
-        android:text="Load"/>
+        android:text="code.py"/>
+
+    <Button
+        android:id="@+id/fileBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/loadBtn"
+        android:onClick="showFilePicker"
+        android:text="File" />
 
     <Button
         android:layout_width="wrap_content"

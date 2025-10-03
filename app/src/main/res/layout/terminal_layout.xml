@@ -3,211 +3,211 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#333333"
-    >
+    android:background="#333333">
 
-
-    <EditText
-        android:id="@+id/terminalTxt"
+    <ScrollView
+        android:layout_above="@+id/inputLyt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#292929"
-        android:layout_above="@+id/inputEdt"
-        
-        android:scrollbars="vertical|horizontal"
-        android:textIsSelectable="true"
-        android:textColor="#00AA00"
-        android:inputType="none"
-        android:gravity="bottom"
+        android:id="@+id/terminalScroller"
+        >
+        <EditText
+            android:id="@+id/terminalTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#333333"
+            android:textColor="#999999"
+            android:textSize="20sp"
+            android:inputType="textMultiLine|textVisiblePassword"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            />
+    </ScrollView>
 
 
-         />
-
-    <EditText
-        android:id="@+id/inputEdt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonUpArrow"
-        android:textColor="#00AA00"
-        android:inputType="text"
-        android:ems="10">
-        <requestFocus />
-    </EditText>
-
-    <Button
-        android:id="@+id/buttonUpArrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Up"
-        android:layout_above="@id/buttonSend"
-        android:onClick="sendUpArrow"/>
-
-    <Button
-        android:id="@+id/buttonDownArrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Down"
-        android:layout_toRightOf="@id/buttonUpArrow"
-        android:layout_above="@id/buttonSend"
-        android:onClick="sendDownArrow"/>
-
-
-    <Button
-        android:id="@+id/buttonCTRLC"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="prompt"
-        android:layout_alignParentBottom="true"
-        android:onClick="sendCtrlC"/>
-
-    <Button
-        android:id="@+id/buttonCTRLD"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/buttonCTRLC"
-        android:text="reboot"
-        android:layout_alignParentBottom="true"
-        android:onClick="sendCtrlD"/>
-
-    <Button
-        android:id="@+id/buttonTab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/buttonCTRLD"
-        android:text="Tab"
-        android:layout_alignParentBottom="true"
-        android:onClick="sendTab"/>
-
-    <Button
-        android:id="@+id/buttonSend"
+    <RelativeLayout
+        android:id="@+id/inputLyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/buttonTab"
-        android:text="Send"/>
-    
-    
+        android:layout_marginBottom="3dp">
+
+        <LinearLayout
+            android:id="@+id/controlButtonsLyt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true">
+
+            <Button
+                android:id="@+id/ctrlCBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:onClick="sendCtrlC"
+                android:text="prompt"
+                android:textSize="12sp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp" />
+
+            <Button
+                android:id="@+id/ctrlDBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:onClick="sendCtrlD"
+                android:text="reboot"
+                android:textSize="12sp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp" />
+
+            <Button
+                android:id="@+id/upBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:onClick="sendUpArrow"
+                android:text="Up"
+                android:textSize="12sp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp" />
+
+            <Button
+                android:id="@+id/downBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:onClick="sendDownArrow"
+                android:text="Down"
+                android:textSize="12sp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp" />
+
+            <Button
+                android:id="@+id/tabBtn"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:onClick="sendTab"
+                android:text="Tab"
+                android:textSize="12sp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/inputEdt"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toLeftOf="@+id/buttonSend"
+            android:layout_below="@id/controlButtonsLyt"
+            android:background="#555555"
+            android:inputType="textVisiblePassword"
+            android:textColor="#eeeeee" />
+
+        <Button
+            android:id="@+id/buttonSend"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/controlButtonsLyt"
+            android:text="Send"
+            android:textSize="12sp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp" />
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/macroLyt"
-        android:background="#333333"
-        
-        android:visibility="gone"
-        android:padding="8dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="REPL Macros"
-            android:textColor="#aaaaaa"
-            android:textSize="28sp"
-            android:layout_alignParentLeft="true"
-            />
-        
-        <ImageView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/icon_new"
-            android:id="@+id/newMacroBtn"
-            />
-        
-        
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:id="@+id/newMacroNameLyt"
-            android:visibility="gone"
-            android:background="#333333"
-            >
-            
-            <ImageView
-                android:id="@+id/createMacroBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" 
-                android:src="@drawable/icon_save_green"
-                
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-            <EditText
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@id/createMacroBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/newMacroNameEdt"
-                android:layout_alignParentStart="true"
+        android:layout_height="match_parent"
+        android:background="#99333333"
+        android:visibility="gone">
 
-                android:textColor="#aaaaaa"
-                android:layout_toStartOf="@id/createMacroBtn" />
-            
-        </RelativeLayout>
-
-            
-        
         <ListView
-            android:layout_below="@id/newMacroBtn"
             android:id="@+id/macroFilesLst"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="#eeeeee" />
 
-        </ListView>
+        <ImageView
+            android:id="@+id/newMacroBtn"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add_black_24dp"
+            android:tint="#00ff00" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/newMacroNameLyt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="32dp"
+        android:background="#ffffff"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/newMacroLbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Enter a name for the new macro"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/newMacroNameEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newMacroLbl"
+            android:layout_toLeftOf="@+id/createMacroBtn" />
+
+        <ImageView
+            android:id="@+id/createMacroBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newMacroLbl"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_check_black_24dp"
+            android:tint="#00ff00" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/macroEditorLyt"
-        android:background="#333333"
-
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Macro Editor"
-            android:textColor="#aaaaaa"
-            android:textSize="28sp"
-            android:paddingLeft="8dp"
-            android:layout_alignParentLeft="true"
-            />
-
-        <ImageView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:onClick="saveMacro"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:id="@+id/macroSaveBtn"
-            android:src="@drawable/icon_save_green"/>
+            android:text="Save" />
 
-        
         <com.foamyguy.circuitpythoneditor.LineNumberEditText
-            android:layout_below="@id/macroSaveBtn"
+            android:id="@+id/macroEditor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-            android:paddingLeft="70px"
-            android:textSize="20sp"
-            android:id="@+id/macroEditor"
-            android:gravity="top"
+            android:layout_marginTop="50dp"
             android:background="#333333"
+            android:gravity="top"
+            android:paddingLeft="70px"
             android:textColor="#999999"
-            />
+            android:textSize="20sp" />
 
         <TextView
-
-            android:layout_below="@id/macroSaveBtn"
+            android:id="@+id/macroEditorLineNumbers"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:id="@+id/macroEditorLineNumbers"
+            android:layout_marginTop="50dp"
             android:textColor="#aaaaaa"
-            />
-        
+            android:textSize="20sp" />
     </RelativeLayout>
-
-
 </RelativeLayout>
