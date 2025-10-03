@@ -1,6 +1,8 @@
 Here is my fork of @foamyguy Circuitpython editor, updated and with a few features added, and a few bugs removed. I built this with AI, so, please don't be too severe about the code, I didn't write it.
 The app now does what I want it to do.
 
+All credit goes to @foamyguy
+
 # Android Circuit Python Editor
 If you are just trying to use the app and your device has access to the [Google Play Store this link](https://play.google.com/store/apps/details?id=com.foamyguy.circuitpythoneditor) is the easiest way to get it installed.
 
